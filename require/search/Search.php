@@ -40,6 +40,7 @@
     const DB_INT = "int";
     const DB_VARCHAR = "varchar";
     const DB_DATETIME = "datetime";
+    const DB_DATE = "date";
 
     const HTML_SELECT = "SELECT";
 
@@ -477,7 +478,8 @@
                       $this->queryArgs[] = $op;
                       $this->queryArgs[] = $value[self::SESS_VALUES];
                     // text fix datetime in multisearch
-                    } else if($this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'datetime' && $value[self::SESS_OPERATOR] != "MORETHANXDAY" && $value[self::SESS_OPERATOR] != "LESSTHANXDAY" ) {
+                    } else if(($this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'datetime' || $this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'date') && $value[self::SESS_OPERATOR] != "MORETHANXDAY" && $value[self::SESS_OPERATOR] != "LESSTHANXDAY" ) {
+                      error_log('STR TO DATE ON');
                       $this->columnsQueryConditions .= "$operator[$p] $open%s.%s %s str_to_date('%s', '%s')$close ";
                       $this->queryArgs[] = $nameTable;
                       $this->queryArgs[] = $value[self::SESS_FIELDS];
@@ -536,7 +538,7 @@
                 $this->queryArgs[] = $value[self::SESS_VALUES];
                 }
               // test fix datetime in multisearch
-              }else if($this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'datetime' && $value[self::SESS_OPERATOR] != "MORETHANXDAY" && $value[self::SESS_OPERATOR] != "LESSTHANXDAY" ){
+              }else if(($this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'datetime' || $this->getSearchedFieldType($nameTable, $value[self::SESS_FIELDS]) == 'date') && $value[self::SESS_OPERATOR] != "MORETHANXDAY" && $value[self::SESS_OPERATOR] != "LESSTHANXDAY" ){
                 $this->columnsQueryConditions .= "$operator[$p] $open%s.%s %s str_to_date('%s', '%s')$close ";
                 $this->queryArgs[] = $nameTable;
                 $this->queryArgs[] = $value[self::SESS_FIELDS];
@@ -727,7 +729,8 @@
             $operatorList = $this->operatorAccount;
         } elseif($accounttype == '5') {
             $operatorList = $this->operatorAccountCheckbox;
-        } elseif($this->getSearchedFieldType($table, $field) == 'datetime') {
+        } elseif($this->getSearchedFieldType($table, $field) == 'datetime' || $this->getSearchedFieldType($table, $field) == 'date') {
+          error_log('DATE OR DATETIME FIELD');
             $operatorList = array_merge($this->operatorList, $this->operatorDelay);
         } else {
             $operatorList = $this->operatorList;
@@ -874,6 +877,15 @@
                             </span>
                         </div>';
                 break;
+              
+            case self::DB_DATE:
+              $html = '<div class="input-group date form_datetime">
+                          <input type="text" class="form-control" name="'.$fieldId.'" id="'.$fieldId.'" value="'.$fieldsInfos[self::SESS_VALUES].'" '.$attr.'/>
+                          <span class="input-group-addon">
+                              '.calendars($fieldId, 'dd/mm/yyyy').'
+                          </span>
+                      </div>';
+              break;
             case self::HTML_SELECT:
 
                 $html = '<select class="form-control" name="'.$fieldId.'" id="'.$fieldId.'">';

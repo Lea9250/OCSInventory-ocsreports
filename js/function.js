@@ -159,7 +159,7 @@ function isnull(selectid, fieldid, fieldtype = null) {
         var parentElement = $("#"+fieldid).parent();
         parentElement.empty();
         parentElement.replaceWith('<input class="form-control" type="number" name="'+fieldid+'" id="'+fieldid+'" value="">');
-    } else if(selectvalue != 'MORETHANXDAY' && selectvalue != 'LESSTHANXDAY' && fieldtype == 'datetime') {
+    } else if(selectvalue != 'MORETHANXDAY' && selectvalue != 'LESSTHANXDAY' && (fieldtype == 'datetime' || fieldtype == 'date')) {
         if($(".form_datetime").length == 0) {
             $.ajax({
                 url: "ajax/calendarfield.php",

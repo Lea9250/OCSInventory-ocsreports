@@ -204,7 +204,8 @@ if (!empty($_SESSION['OCS']['multi_search'])) {
 				<div class="col-sm-3">
 					<div class="form-group">
 						<select class="form-control" name="<?php echo $search->getOperatorUniqId($uniqid, $table); ?>" onchange="isnull('<?php echo $search->getOperatorUniqId($uniqid, $table); ?>', '<?php echo $search->getFieldUniqId($uniqid, $table); ?>', '<?php echo $search->getSearchedFieldType($table, $values['fields']); ?>');" id="<?php echo $search->getOperatorUniqId($uniqid, $table);?>">
-						<?php 	if((strpos($values['fields'], 'fields_') !== false) || ($values['fields'] == "CATEGORY_ID") || ($values['fields'] == 'CATEGORY') || (($search->getSearchedFieldType($table, $values['fields']) == 'datetime'))) {
+						<?php 	if((strpos($values['fields'], 'fields_') !== false) || ($values['fields'] == "CATEGORY_ID") || ($values['fields'] == 'CATEGORY') || (($search->getSearchedFieldType($table, $values['fields']) == 'datetime')) || (($search->getSearchedFieldType($table, $values['fields']) == 'date'))) {
+									error_log("DATE OR DATETIME");
 									echo $search->getSelectOptionForOperators($values['operator'], $table, $values['fields']);
 								} else {
 									echo $search->getSelectOptionForOperators($values['operator'], $table);
